@@ -2,7 +2,6 @@
 
 namespace EllipseSynergie\ApiResponse;
 
-use EllipseSynergie\ApiResponse\Contracts\Response;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Manager;
@@ -18,7 +17,7 @@ use League\Fractal\Pagination\Cursor;
  * @author Maxime Beaudoin <maxime.beaudoin@ellipse-synergie.com>
  * @author Phil Sturgeon <email@philsturgeon.co.uk>
  */
-abstract class AbstractResponse implements Response
+abstract class AbstractResponse
 {
 
     const CODE_WRONG_ARGS = 'GEN-WRONG-ARGS';
@@ -36,6 +35,21 @@ abstract class AbstractResponse implements Response
     const CODE_METHOD_NOT_ALLOWED = 'GEN-METHOD-NOT-ALLOWED';
 
     const CODE_UNWILLING_TO_PROCESS = 'GEN-UNWILLING-TO-PROCESS';
+
+    /*
+     * TODO
+     *
+     * Fork and add this functions
+     * Use IlluminateResponse
+     */
+
+    const CODE_CREATED = 'GEN-CREATED';  // AVERIGUAR QUE SIGNIFICA GEN
+    const CODE_UPDATED = 'GEN-UPDATED';  // AVERIGUAR QUE SIGNIFICA GEN
+    const CODE_DELETED = 'GEN-DELETED';  // AVERIGUAR QUE SIGNIFICA GEN
+
+    /*
+     * End added consts
+     */
 
     /**
      * HTTP Status code
@@ -164,6 +178,51 @@ abstract class AbstractResponse implements Response
             ]
         ]);
     }
+
+    /*
+     * TODO
+     *
+     * Fork and add this functions
+     * Use IlluminateResponse
+     */
+
+    /**
+     * Response for success
+     *
+     * @param string $message
+     * @param string $code
+     * @return mixed
+     */
+    public function withSuccess($message, $code)
+    {
+        return $this->withArray([
+            'success' => [ // change
+                           'code' => $code,
+                           'http_code' => $this->statusCode,
+                           'message' => $message
+            ]
+        ]);
+    }
+
+    public function successCreated($message = 'Created')
+    {
+        return $this->setStatusCode(201)->withSuccess($message, self::CODE_CREATED);
+    }
+
+    public function successUpdated($message = 'Updated')
+    {
+        return $this->setStatusCode(202)->withSuccess($message, self::CODE_UPDATED);
+    }
+
+    public function successDeleted($message = 'Deleted')
+    {
+        return $this->setStatusCode(202)->withSuccess($message, self::CODE_DELETED);
+    }
+
+
+    /*
+     * End added features
+     */
 
     /**
      * Generates a response with a 403 HTTP header and a given message.
